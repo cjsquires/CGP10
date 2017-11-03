@@ -1,0 +1,297 @@
+from pygame.locals import *
+#setup pygame
+pygame.init()
+mainClock = pygame.time.Clock()
+#setup window
+WINDOWHEIGHT = 900
+WINDOWWIDTH = 600
+windowSurface = pygame.display.set_mode((WINDOWWIDTH, WINDOWHEIGHT), 0, 32)
+pygame.display.set_caption('ill name it later')
+#movement
+moveLeft = False
+moveRight = False
+rocketMOVESPEED = 6
+bulletmoveUp = False
+rocksgodown = False
+boost = False
+pewpew = False
+bulletshotleft = False
+rockfall = True
+rocket = False
+secondrocket = False
+MOVESPEED = 10
+rockMOVESPEED = 4
+playerh=100000000
+rockpunchy=10
+bulletd=10
+rocketd = 100
+rockh=100
+playerd=21
+invulnaybilityyyyy=0
+rt = 2
+#colors
+RED = (255, 0, 0)
+TURQUOISE = (0, 255, 255)
+GRAY = (128, 128, 128)
+BLACK = (0, 0, 0)
+YELLOW = (255, 255, 0)
+#text
+font = pygame.font.SysFont(None, 48)
+basicFont = pygame.font.SysFont(None, 48)
+def drawText(text, font, surface,x,y):
+    textobj = font.render(text, 1, textColour)
+    textrect = textobj.get_rect()
+    textrect.topleft = (x, y)
+    surface.blit(textobj, textrect)
+#variables
+sprite1 = pygame.image.load('space ship idle.png')
+
+sprite2 = pygame.image.load('space ship idle right bank.png')
+sprite3 = pygame.image.load('space ship idle left bank.png')
+
+sprite4 = pygame.image.load('space ship boosting.png')
+
+sprite5 = pygame.image.load('space ship boosting right bank.png')
+sprite6 = pygame.image.load('space ship boosting left bank.png')
+
+sprite7 = pygame.image.load('bullet.png')
+
+sprite8 = pygame.image.load('asteroid thing.png')
+
+sprite9 = pygame.image.load('rocket.png')
+
+basicFont = pygame.font.SysFont(None, 28)
+
+player = pygame.Rect(150,750,35,40)
+playerImage = sprite1
+playerStretchedImage = pygame.transform.scale(playerImage,(35, 40))
+
+playerbr = pygame.Rect(150,750,35,40)
+playerImagebr = sprite2
+playerStretchedImagebr = pygame.transform.scale(playerImagebr,(35, 40))
+
+playerbl = pygame.Rect(150,750,35,40)
+playerImagebl = sprite3
+playerStretchedImagebl = pygame.transform.scale(playerImagebl,(35, 40))
+
+playerb = pygame.Rect(150,750,35,40)
+playerImageb = sprite4
+playerStretchedImageb = pygame.transform.scale(playerImageb,(35, 40))
+
+playerbbr = pygame.Rect(150,750,35,40)
+playerImagebbr = sprite5
+playerStretchedImagebbr = pygame.transform.scale(playerImagebbr,(35, 40))
+
+playerbbl = pygame.Rect(150,750,35,40)
+playerImagebbl = sprite6
+playerStretchedImagebbl = pygame.transform.scale(playerImagebbl,(35, 40))
+
+bulletImage = sprite7
+bulletStretchedImage = pygame.transform.scale(bulletImage,(5, 15))
+
+rockImage = sprite8
+rockStretchedImage = pygame.transform.scale(rockImage,(105, 105))
+
+rocketImage = sprite9
+rocketStretchedImage = pygame.transform.scale(rocketImage,(6, 20))
+
+PLAYER = [player, playerbr, playerbl, playerb, playerbbr, playerbbl]
+
+BULLETS = []
+ROCKETS = []
+ROCKSEXCLAMATIONPOINT = []
+timerpewpew = 0
+timerockface = 0
+timerrocket = 0
+materials = []
+gameplay=True
+background = pygame.Rect(0, 0, 600, 900)
+backgroundImage = pygame.image.load('space n stuff.png')
+backgroundStretchedImage = pygame.transform.scale(backgroundImage,(600, 900))
+
+def Pewpew():
+    global bulletmoveUp, BULLETS, rockpunchy, playerh, invulnaybilityyyyy
+    while True:
+        bulletmoveUp = True
+        for b in BULLETS:
+            if b.top<0:
+               BULLETS.remove(b) 
+            windowSurface.blit(bulletStretchedImage, b)
+
+        for r in ROCKSEXCLAMATIONPOINT:
+            if r.colliderect(player):
+               playerh = playerh - rockpunchy
+               pygame.display.set_caption('ill name it later hp = '+ str(playerh))
+               print("Collision")
+               print(PLAYER)
+            if playerh<=0:
+                pygame.display.set_caption('you suck')
+                time.sleep(3)
+                pygame.quit()
+                sys.exit()
+        break
+
+def rockets():
+    global bulletmoveUp, ROCKETS
+    while True:
+        bulletmoveUp = True
+        for rk in ROCKETS:
+            if rk.top<0:
+               ROCKETS.remove(rk) 
+            windowSurface.blit(rocketStretchedImage, rk)
+        break
+
+def rocky():
+    global rocksgodown, ROCKSEXCLAMATIONPOINT, rockh, bulletd , rotaterock, rocketd
+    while True:
+        rocksgodown = True
+        for r in ROCKSEXCLAMATIONPOINT:
+            if r.bottom<0:
+               ROCKSEXCLAMATIONPOINT.remove(r) 
+            windowSurface.blit(rotaterock, r)
+            for b in BULLETS:
+                if b.colliderect(r):
+                   BULLETS.remove(b)
+                   rockh = rockh - bulletd
+                   if rockh<=0:
+                       ROCKSEXCLAMATIONPOINT.remove(r)
+                       rockh = 100
+            for rk in ROCKETS:
+                if rk.colliderect(r):
+                   ROCKETS.remove(rk)
+                   rockh = rockh - rocketd
+                   if rockh<=0:
+                       ROCKSEXCLAMATIONPOINT.remove(r)
+                       rockh = 100
+        break
+
+def Gameplay():
+    global playerd, playerh, rockpunchy, rt, secondrocket, rocketMOVESPEED, rocketd, rocket, ROCKETS, timerrocket, rotaterock, rockh, bulletd, pewpew, rockh, a, moveRight, moveLeft, boost, rockfall, MOVESPEED, player, rk, background, PLAYER, BULLETS, b, timerpewpew, bulletshotleft, rocksgodown, ROCKSEXCLAMATIONPOINT, timerockface
+    while gameplay==True:
+        for event in pygame.event.get():
+            if event.type == QUIT:
+                  pygame.quit()
+                  sys.exit()
+            if event.type == KEYDOWN:
+                if event.key == ord('a'):
+                    moveRight = False
+                    moveLeft = True
+                if event.key == ord('d'):
+                    moveRight = True
+                    moveLeft = False
+                if event.key == ord(' '):
+                    pewpew = True
+                if event.key == ord('w'):
+                    boost = True
+                if event.key == ord('r'):
+                    rocket = True
+            if event.type == KEYUP:
+                if event.key == ord('a'):
+                    moveLeft = False
+                if event.key == ord('d'):
+                    moveRight = False
+                if event.key == ord(' '):
+                    pewpew = False
+                if event.key == ord('w'):
+                    boost = False
+                if event.key == ord('r'):
+                    rocket = False
+        for playerx in PLAYER:
+            if moveLeft and player.left > 0:
+                playerx.left -= MOVESPEED
+            if moveRight and player.right < WINDOWWIDTH:
+                playerx.right += MOVESPEED
+        for b in BULLETS:
+            if bulletmoveUp:
+                b.top -= MOVESPEED
+        for r in ROCKSEXCLAMATIONPOINT:
+            if rocksgodown:
+                r.bottom += rockMOVESPEED
+        for rk in ROCKETS:
+            if bulletmoveUp:
+                rk.top -= rocketMOVESPEED
+
+
+        windowSurface.fill(GRAY)
+        windowSurface.blit(backgroundStretchedImage, background)
+
+        if moveLeft==False and moveRight==False and boost==False:
+            windowSurface.blit(playerStretchedImage, player)
+        
+        if moveLeft==True and boost==False:
+            windowSurface.blit(playerStretchedImagebl, playerbl)
+                
+        if moveRight==True and boost==False:
+            windowSurface.blit(playerStretchedImagebr, playerbr)
+
+        if boost==True and moveLeft==False and moveRight==False:
+            windowSurface.blit(playerStretchedImageb, playerb)
+
+        if boost==True and moveRight==True:
+            windowSurface.blit(playerStretchedImagebbr, playerbbr)
+
+        if boost==True and moveLeft==True:
+            windowSurface.blit(playerStretchedImagebbl, playerbbl)
+            
+        timerpewpew = timerpewpew + 1
+        if pewpew==True and timerpewpew>=12 and bulletshotleft==False:
+            timerpewpew = 0
+            bullet = pygame.Rect(0,0,5,15)
+            bullet.bottom=player.top
+            bullet.left=player.left+int(player.width/10)
+            BULLETS.append(bullet)
+            bulletshotleft = True
+
+        timerpewpew = timerpewpew + 1
+        if pewpew==True and timerpewpew>=12 and bulletshotleft==True:
+            timerpewpew = 0
+            bullet = pygame.Rect(0,0,5,15)
+            bullet.bottom=player.top
+            bullet.left=player.left+int(player.width/1.4)
+            BULLETS.append(bullet)
+            bulletshotleft = False
+        Pewpew()
+
+        timerrocket = timerrocket + 1
+        if rocket==True and timerrocket>=150 and secondrocket==False:
+            rocket = pygame.Rect(0,0,6,20)
+            rocket.bottom=player.top
+            rocket.left=player.left+int(player.width/10)
+            ROCKETS.append(rocket)
+            secondrocket=True
+        rockets()
+
+        if timerrocket>=150 and secondrocket==True:
+            timerrocket = 0
+            rocket = pygame.Rect(0,0,6,20)
+            rocket.bottom=player.top
+            rocket.left=player.left+int(player.width/1.4)
+            ROCKETS.append(rocket)
+            secondrocket=False
+            rocket = False
+        rockets()
+
+        timerockface = timerockface + 1
+        rt = rt + 1
+        rotaterock=pygame.transform.rotate(rockStretchedImage, rt)
+        if rockfall==True and timerockface>=130:
+            timerockface = 0
+            rockMOVESPEED = 4
+            rock = pygame.Rect(0,0,70,70)
+            rock.top=background.top
+            rock.left=background.left+random.randint(0,500)
+            ROCKSEXCLAMATIONPOINT.append(rock)
+
+        timerockface = timerockface + 1
+        if rockfall==True and boost==True and timerockface>=65:
+            timerockface = 0
+            rockMOVESPEED = 8
+            rock = pygame.Rect(0,0,105,105)
+            rock.top=background.top
+            rock.left=background.left+random.randint(0,500)
+            ROCKSEXCLAMATIONPOINT.append(rock)
+        rocky()
+        
+        pygame.display.update()
+        mainClock.tick(50)
+Gameplay()
