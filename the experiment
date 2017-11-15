@@ -77,7 +77,11 @@ pinkStretchedImage = pygame.transform.scale(pinkImage,(97, 53))
 black = pygame.Rect(800,295,97,53)
 blackImage = sprite6
 blackStretchedImage = pygame.transform.scale(blackImage,(97, 53))
+
 RED = [red]
+
+SHIPS = [red, green, blue, yellow, pink, black]
+currentShip = 0 #red = 0, green = 1, blue = 2, yellow = 3, pink = 4, black = 5
 materials = []
 gameplay=True
 background = pygame.Rect(0, 0, 900, 900)
@@ -85,9 +89,20 @@ backgroundImage = pygame.image.load('space n stuff.png')
 backgroundStretchedImage = pygame.transform.scale(backgroundImage,(900, 900))
     
 def Gameplay():
-    global red, green, blue, yellow, pink, black, click, MousePos
+    global red, green, blue, yellow, pink, black, click, MousePos, currentShip
     while gameplay==True:
         for event in pygame.event.get():
+            if event.type == KEYDOWN:
+                if event.key == ord('a'):
+                    findx = red.x
+                    findy = red.y
+                    print ( str(findy), str(findx))
+                if event.key == ord('q'):
+                    currentShip = 2
+                if event.key == K_ESCAPE:
+                    pygame.quit()
+                    sys.exit(0)
+                    
             if event.type == MOUSEBUTTONDOWN:
                 click = True
             if event.type == MOUSEBUTTONUP:
@@ -97,14 +112,14 @@ def Gameplay():
                   sys.exit()
         MousePos=pygame.mouse.get_pos()
         for red in RED:
-            if click == True and red.left > MousePos[0]:
-                red.left -= MOVESPEED
-            if click == True and red.right < MousePos[0]:
-                red.right += MOVESPEED
-            if click == True and red.top > MousePos[1]:
-                red.top -= MOVESPEED
-            if click == True and red.bottom < MousePos[1]:
-                red.bottom += MOVESPEED
+            if click == True and SHIPS[currentShip].left > MousePos[0]:
+                SHIPS[currentShip].left -= MOVESPEED
+            if click == True and SHIPS[currentShip].right < MousePos[0]:
+                SHIPS[currentShip].right += MOVESPEED
+            if click == True and SHIPS[currentShip].top > MousePos[1]:
+                SHIPS[currentShip].top -= MOVESPEED
+            if click == True and SHIPS[currentShip].bottom < MousePos[1]:
+                SHIPS[currentShip].bottom += MOVESPEED
 
         
 
@@ -130,7 +145,6 @@ def Gameplay():
             windowSurface.blit(blackStretchedImage, black)
 
         pygame.display.update()
-        mainClock.tick(50)
-Gameplay()
+        mainCl
         
 
