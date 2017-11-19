@@ -34,7 +34,7 @@ bulletshotleft = False
 
 railguns = False
 
-bulletmoveUp = False
+bulletmoveUp = True
 
 MousePos=pygame.mouse.get_pos()
 
@@ -109,10 +109,10 @@ def Pewpew():
         bulletmoveUP = True
         for b in PROJECTILES:
             if b.left<0:
-               PROJECTILES.remove(b) 
+               PROJECTILES.remove(b)
             windowSurface.blit(bulletStretchedImage, b)
         break
-    
+
 def Gameplay():
     global red, green, blue, yellow, pink, black, click, MousePos, currentShip, bulletshotleft, PROJECTILES, reload, bullet, railguns, b, bullet
     while gameplay==True:
@@ -137,7 +137,7 @@ def Gameplay():
                     sys.exit(0)
             if event.type == KEYUP:
                 if event.key == ord(' '):
-                    railguns = False     
+                    railguns = False
             if event.type == MOUSEBUTTONDOWN:
                 click = True
             if event.type == MOUSEBUTTONUP:
@@ -145,7 +145,7 @@ def Gameplay():
             if event.type == QUIT:
                   pygame.quit()
                   sys.exit()
-                  
+
         MousePos=pygame.mouse.get_pos()
         for red in RED:
             if click == True and SHIPS[currentShip].left > MousePos[0]:
@@ -158,10 +158,10 @@ def Gameplay():
                 SHIPS[currentShip].bottom += MOVESPEED
 
         for b in PROJECTILES:
-            if bulletmoveUp:
+            if bulletmoveUp == True:
                 b.left -= MOVESPEED
 
-        
+
 
         windowSurface.fill(GRAY)
         windowSurface.blit(backgroundStretchedImage, background)
@@ -198,7 +198,7 @@ def Gameplay():
             reload = 0
             bullet = pygame.Rect(0,0,5,15)
             bullet.right=SHIPS[currentShip].left
-            bullet.top=SHIPS[currentShip].top+int(SHIPS[currentShip].width/1.4)
+            bullet.top=SHIPS[currentShip].top+int(SHIPS[currentShip].width/2.5)
             PROJECTILES.append(bullet)
             bulletshotleft = False
         Pewpew()
@@ -206,4 +206,3 @@ def Gameplay():
         pygame.display.update()
         mainClock.tick(50)
 Gameplay()
-        
