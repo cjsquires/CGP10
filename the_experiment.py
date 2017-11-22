@@ -30,6 +30,8 @@ click = False
 
 MOVESPEED = 5
 
+BULLETMOVESPEED = 7
+
 bulletshotleft = False
 
 railguns = False
@@ -114,7 +116,7 @@ def Pewpew():
         break
 
 def Gameplay():
-    global red, green, blue, yellow, pink, black, click, MousePos, currentShip, bulletshotleft, PROJECTILES, reload, bullet, railguns, b, bullet
+    global red, green, blue, yellow, pink, black, click, MousePos, currentShip, bulletshotleft, PROJECTILES, reload, bullet, BULLETMOVESPEED, railguns, b, bullet
     while gameplay==True:
         for event in pygame.event.get():
             if event.type == KEYDOWN:
@@ -159,7 +161,7 @@ def Gameplay():
 
         for b in PROJECTILES:
             if bulletmoveUp == True:
-                b.left -= MOVESPEED
+                b.left -= BULLETMOVESPEED
 
 
 
@@ -198,7 +200,7 @@ def Gameplay():
             reload = 0
             bullet = pygame.Rect(0,0,5,15)
             bullet.right=SHIPS[currentShip].left
-            bullet.top=SHIPS[currentShip].top+int(SHIPS[currentShip].width/2.5)
+            bullet.top=SHIPS[currentShip].top+int(SHIPS[currentShip].width/3)
             PROJECTILES.append(bullet)
             bulletshotleft = False
         Pewpew()
