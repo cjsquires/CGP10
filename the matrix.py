@@ -26,9 +26,9 @@ def drawText(text, font, surface,x,y):
     textrect.topleft = (x, y)
     surface.blit(textobj, textrect)
 
-sprite1 = pygame.image.load('daedalus red.png')
+sprite1 = pygame.image.load('wheatly.png')
 
-red = pygame.Rect(100,5,97,53)
+red = pygame.Rect(300,300,100,100)
 redImage = sprite1
 redStretchedImage = pygame.transform.scale(redImage,(100, 100))
 
@@ -100,57 +100,96 @@ E[4] = (400,400)
 
 MATRIX = [A, B, C, D, E]
 
+SELECTING = []
+
 MOVESPEED = 100
 
 placement = B[4]
 
 RED = [red]
 
-A3occupied = False
+area = D[1]
+
+D1occupied = False
 
 materials = []
 gameplay=True
 background = pygame.Rect(0, 0, 500, 500)
-backgroundImage = pygame.image.load('space n stuff.png')
+backgroundImage = pygame.image.load('PURPLE.png')
 backgroundStretchedImage = pygame.transform.scale(backgroundImage,(500, 500))
 
 def confirm():
-    global A3occupied
-    if A3occupied == True:
+    global D1occupied
+    if D1occupied == True:
         print ('holycrapitworked')
-    else:
+    if D1occupied == False:
         print ('crrraaaaaappppp')
 
 def Gameplay():
-    global red, green, blue, yellow, pink, black, click, MousePos, currentShip, bulletshotleft, A3occupied, PROJECTILES, reload, bullet, railguns, b, bullet, placement
+    global red, D1occupied, placement, area, SELECTING
     while gameplay==True:
         for event in pygame.event.get():
             if event.type == KEYDOWN:
-                if event.key == ord('1'):
-                    placement = D[1]
-                if event.key == ord('2'):
-                    placement = A[3]
-                if event.key == ord('3'):
-                    placement = E[0]
                 if event.key == ord('p'):
                     confirm()
+                if event.key == ord('a'):
+                    SELECTING.append(A)
+                if event.key == ord('b'):
+                    SELECTING.append(B)
+                if event.key == ord('c'):
+                    SELECTING.append(C)
+                if event.key == ord('d'):
+                    SELECTING.append(D)
+                if event.key == ord('e'):
+                    SELECTING.append(E)
+                if event.key == ord('1'):
+                    placement = SELECTING[0][0]
+                if event.key == ord('2'):
+                    placement = SELECTING[0][1]
+                if event.key == ord('3'):
+                    placement = SELECTING[0][2]
+                if event.key == ord('4'):
+                    placement = SELECTING[0][3]
+                if event.key == ord('5'):
+                    placement = SELECTING[0][4]
+                if event.key == ord(' '):
+                    print (red)
                 if event.key == K_ESCAPE:
                     pygame.quit()
                     sys.exit(0)
+            if event.type == KEYUP:
+                if event.key == ord('a'):
+                    SELECTING.remove(A)
+                if event.key == ord('b'):
+                    SELECTING.remove(B)
+                if event.key == ord('c'):
+                    SELECTING.remove(C)
+                if event.key == ord('d'):
+                    SELECTING.remove(D)
+                if event.key == ord('e'):
+                    SELECTING.remove(E)
             if event.type == QUIT:
                   pygame.quit()
                   sys.exit()
-                  
-        MousePos=pygame.mouse.get_pos()
-        for red in RED:
-            if red.left > placement[0]:
-                red.left -= MOVESPEED
-            if red.right < placement[0]:
-                red.right += MOVESPEED
-            if red.top > placement[1]:
-                red.top -= MOVESPEED
-            if red.bottom < placement[1]:
-                red.bottom += MOVESPEED
+
+
+            
+            
+
+        red = pygame.Rect(placement[0], placement[1],100,100)
+        
+        if MOVESPEED == 47328564562134120:
+            
+            MousePos=pygame.mouse.get_pos()
+            for red in RED:
+                if 0 > placement[0]:
+                    red.left -= MOVESPEED
+                if 0 < placement[0]:
+                    red.right += MOVESPEED
+                if 0 > placement[1]:
+                    red.top -= MOVESPEED
+                if 0 < placement[1]:
+                    red.bottom += MOVESPEED
         
 
         windowSurface.fill(GRAY)
@@ -159,8 +198,11 @@ def Gameplay():
         if True:
             windowSurface.blit(redStretchedImage, red)
 
-        if red.left == placement[0] and red.top == placement[1] and red.right == placement[0] and red.bottom == placement[1]:
-            A3occupied = True
+        if red.left == area[0] and red.top == area[1]:
+            D1occupied = True
+
+        if red.left != area[0] and red.top != area[1]:
+            D1occupied = False
 
         pygame.display.update()
         mainClock.tick(50)
