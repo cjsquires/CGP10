@@ -32,7 +32,9 @@ red = pygame.Rect(300,300,100,100)
 redImage = sprite1
 redStretchedImage = pygame.transform.scale(redImage,(100, 100))
 
-
+notred = pygame.Rect(300,300,100,100)
+notredImage = sprite1
+notredStretchedImage = pygame.transform.scale(notredImage,(100, 100))
 
 A = [0, 1, 2, 3, 4]
 
@@ -106,11 +108,15 @@ MOVESPEED = 100
 
 placement = B[4]
 
+selected = 1
+
 RED = [red]
 
 area = D[1]
 
 D1occupied = False
+
+boop = True
 
 materials = []
 gameplay=True
@@ -126,7 +132,7 @@ def confirm():
         print ('crrraaaaaappppp')
 
 def Gameplay():
-    global red, D1occupied, placement, area, SELECTING
+    global red, D1occupied, placement, area, SELECTING, notred, boop, selected
     while gameplay==True:
         for event in pygame.event.get():
             if event.type == KEYDOWN:
@@ -152,8 +158,17 @@ def Gameplay():
                     placement = SELECTING[0][3]
                 if event.key == ord('5'):
                     placement = SELECTING[0][4]
+                if event.key == ord('r'):
+                    selected = 1
+                    placement = red
+                if event.key == ord('n'):
+                    selected = 2
+                    placement = notred
                 if event.key == ord(' '):
-                    print (red)
+                    if RED[0] == red:
+                        print ('gsdvhifsivleuvogi')
+                    if RED[0] != red:
+                        print ('fuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu')
                 if event.key == K_ESCAPE:
                     pygame.quit()
                     sys.exit(0)
@@ -171,12 +186,12 @@ def Gameplay():
             if event.type == QUIT:
                   pygame.quit()
                   sys.exit()
+        
+        if selected == 1:
+            red = pygame.Rect(placement[0], placement[1],100,100)
 
-
-            
-            
-
-        red = pygame.Rect(placement[0], placement[1],100,100)
+        if selected == 2:
+            notred = pygame.Rect(placement[0], placement[1],100,100)
         
         if MOVESPEED == 47328564562134120:
             
@@ -190,6 +205,16 @@ def Gameplay():
                     red.top -= MOVESPEED
                 if 0 < placement[1]:
                     red.bottom += MOVESPEED
+ 
+            for notred in RED:
+                if 0 > placement[0]:
+                    notred.left -= MOVESPEED
+                if 0 < placement[0]:
+                    notred.right += MOVESPEED
+                if 0 > placement[1]:
+                    notred.top -= MOVESPEED
+                if 0 < placement[1]:
+                    notred.bottom += MOVESPEED
         
 
         windowSurface.fill(GRAY)
@@ -197,6 +222,9 @@ def Gameplay():
 
         if True:
             windowSurface.blit(redStretchedImage, red)
+
+        if True:
+            windowSurface.blit(notredStretchedImage, notred)
 
         if red.left == area[0] and red.top == area[1]:
             D1occupied = True
