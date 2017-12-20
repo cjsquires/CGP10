@@ -234,4 +234,5 @@ def Gameplay():
 
         pygame.display.update()
         mainClock.tick(50)
+        
 Gameplay()
